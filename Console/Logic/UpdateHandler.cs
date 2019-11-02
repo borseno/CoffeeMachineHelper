@@ -67,7 +67,6 @@ namespace Logic
             UserInfo userInfo = new UserInfo
             {
                 User = botUser,
-                IsVerified = false
             };
             ctx.UserInfos.Add(userInfo);
             return userInfo;
@@ -91,9 +90,8 @@ namespace Logic
                 return;
             }
 
-            userInfo.IsVerified = true;
             userInfo.UtcVerifyDate = DateTime.UtcNow;
-            userInfo.ExpireDate = userInfo.UtcVerifyDate.Value + keyEntity.Term;
+            userInfo.UtcExpireDate = userInfo.UtcVerifyDate.Value + keyEntity.Term;
 
             ctx.Keys.Remove(keyEntity);
 
@@ -114,7 +112,7 @@ namespace Logic
 
         private async Task HandleVerifiedUpdate(Update update, UserInfo userInfo)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
