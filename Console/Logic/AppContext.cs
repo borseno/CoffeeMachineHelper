@@ -11,7 +11,7 @@ namespace Logic
     public class AppContext : DbContext
     {
         public AppContext() : base()
-        { 
+        {
 
         }
 
@@ -44,10 +44,6 @@ namespace Logic
                 .WithOne(i => i.UserInfo)
                 .HasForeignKey<UserState>(i => i.UserId);
 
-            //blder.Entity<Answer>()
-            //    .HasOne(i => i.NextQuestion)
-            //    .WithMany()
-
             SeedData(blder);
 
             base.OnModelCreating(blder);
@@ -58,43 +54,70 @@ namespace Logic
             SeedKeys(blder);
             SeedProblems(blder);
 
-            
+
         }
 
         private static void SeedProblems(ModelBuilder blder)
         {
-            //var answers = Enumerable.Range(1, 20).Select(i => new Answer
-            //{
-            //    Value = "Well, in some way.." + -i,
-            //    Id = -i,
-            //});
-                    
+            var question = new Question
+            {
 
-            //blder.Entity<Answer>()
-            //    .HasData(answers);
+                Id = -1,
+                Value = "How do you wanna fix this?"
+            };
 
-            //var question = new Question
-            //{
-                
-            //    Id = -1,
-            //    Answers = answers,
-            //    Value = "How do you wanna fix this?"
-            //};
+            var question2 = new Question
+            {
+                Id = -2,
+                Value = "Bullshit, your solution doesnt seem to be good. Still wanna fix it?"
+            };
 
-            //blder.Entity<Question>()
-            //    .OwnsMany(i => i.Answers)
-            //    .HasData(question);
+            blder.Entity<Question>()
+                .HasData(new[] { question, question2 });
 
-            var problems = Enumerable.Range(1, 20).Select(i => new Problem
+            var answers = Enumerable.Range(1, 1).Select(i => new
+            {
+                Value = "Well, in some way.." + -i,
+                Id = -i,
+                OriginId = question.Id,
+                NextQuestionId = question2.Id
+            });
+
+            blder.Entity<Answer>()
+                .HasData(answers);
+
+            var problems = Enumerable.Range(1, 20).Select(i => new
             {
                 Description = "нет кофенет конет кофенет кофефенет кофенет кофенет кофенет кофенет кофенет кофе",
                 Name = "мм проблема",
                 ShortDescription = "holy crap",
-                Id = -i
+                Id = -i,
+                FirstQuestionId = question.Id
             });
 
             blder.Entity<Problem>()
                 .HasData(problems);
+
+            var solution = new
+            {
+                ProblemId = problems.First().Id,
+                Id = -1,
+                Value = "Ok, just sit down and wait 5 mins.."
+            };
+
+            blder.Entity<Solution>()
+                .HasData(solution);
+
+            var lastAnswer = new
+            {
+                Value = "Yes please do.",
+                Id = answers.Last().Id - 1,
+                OriginId = question2.Id,
+                SolutionId = solution.Id
+            };
+
+            blder.Entity<Answer>()
+                .HasData(lastAnswer);
         }
 
         private static void SeedKeys(ModelBuilder blder)

@@ -13,32 +13,6 @@ namespace Logic.Models
 
         public Question FirstQuestion { get; set; }
 
-        public IEnumerable<Solution> Solutions { get; set; }
-    }
-
-    public class Question
-    {
-        public int Id { get; set; }
-        public string Value { get; set; }
-       
-        public IEnumerable<Answer> Answers { get; set; }
-    }
-
-    public class Answer
-    {
-        public int Id { get; set; }
-        public string Value { get; set; }
-
-        public Question Origin { get; set; }
-        public Question NextQuestion { get; set; }
-        public Solution Solution { get; set; }
-    }
-
-    public class Solution
-    {
-        public int Id { get; set; }
-        public string Value { get; set; }
-
-        public Problem Problem { get; set; }
+        public ICollection<Solution> Solutions { get; set; }
     }
 }

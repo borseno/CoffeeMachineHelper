@@ -24,22 +24,4 @@ namespace Logic.Models
 
         public UserState State { get; set; }
     }
-
-    public class UserState
-    {
-        public int UserId { get; set; }
-        public UserInfo UserInfo { get; set; }
-
-        public UserStage UserStage { get; set; }
-
-        public Problem Problem { get; set; }
-        public Question Question { get; set; }
-    }
-
-    public enum UserStage
-    {
-        None = 0,
-        PickingProblem = 1,
-        AnsweringQuestion = 2
-    }
 }
