@@ -63,7 +63,14 @@ namespace ConsoleApp
 
             var handler = new UpdateHandler(bot, ctx, e.Update);
 
-            handler.HandleUpdate().GetAwaiter().GetResult();
+            try
+            {
+                handler.HandleUpdate().GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }
