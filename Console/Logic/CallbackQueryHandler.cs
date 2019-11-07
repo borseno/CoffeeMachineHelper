@@ -53,6 +53,7 @@ namespace Logic
 
             var problem = await ctx.Problems
                 .Include(i => i.FirstQuestion)
+                    .ThenInclude(i => i.Answers)
                 .FirstAsync(i => i.Id == id);
 
             var question = problem.FirstQuestion;
