@@ -52,14 +52,117 @@ namespace Logic
         private void SeedData(ModelBuilder blder)
         {
             SeedKeys(blder);
+            SeedQuestions(blder);
             SeedProblems(blder);
-
-
+            SeedAnswers(blder);
+            SeedSolutions(blder);
         }
 
-        private static void SeedProblems(ModelBuilder blder)
+        public static void SeedSolutions(ModelBuilder blder)
         {
-            var question = new Question
+            var solutions = GetSolutions();
+
+            blder.Entity<Solution>()
+                .HasData(solutions);
+        }
+
+        public static ICollection<object> GetSolutions()
+        {
+            var solution1 = new
+            {
+                ProblemId = -999,
+                Id = -1,
+                Value = "Ok, just sit down and wait 5 mins.."
+            };
+
+            var solution2 = new
+            {
+                ProblemId = -999,
+                Id = -2,
+                Value = "mock value"
+            };
+
+            var solutions = new object[]
+            {
+                solution1,
+                solution2
+            };
+            return solutions;
+        }
+
+        public static void SeedAnswers(ModelBuilder blder)
+        {
+            var answers = GetAnswers();
+
+            blder.Entity<Answer>()
+                .HasData(answers);
+        }
+
+        public static ICollection<object> GetAnswers()
+        {
+            var answer1 = new
+            {
+                Value = "Well, in some way..",
+                Id = -1,
+                OriginId = -1,
+                NextQuestionId = -2
+            };
+
+            var answer2 = new
+            {
+                Value = "Well, in some way..",
+                Id = -2,
+                OriginId = -2,
+                NextQuestionId = -3
+            };
+
+            var answers = new object[]
+            {
+                answer1,
+                answer2
+            };
+
+            return answers;
+        }
+
+        public static ICollection<object> GetProblems()
+        {
+            var problem = new
+            {
+                Description = "Machine is not working anymore, although it used to work ",
+                Name = "Not working machine",
+                ShortDescription = "Machine is not working anymore!",
+                Id = -1,
+                FirstQuestionId = -1
+            };
+
+            var problems = new[]
+            {
+                problem
+            };
+
+            return problems;
+        }
+
+        public static void SeedProblems(ModelBuilder blder)
+        {
+            var problems = GetProblems();
+
+            blder.Entity<Problem>()
+                .HasData(problems);
+        }
+
+        public static void SeedQuestions(ModelBuilder blder)
+        {
+            var questions = GetQuestions();
+
+            blder.Entity<Question>()
+                .HasData(questions);
+        }
+
+        public static ICollection<object> GetQuestions()
+        {
+            var question1 = new Question
             {
 
                 Id = -1,
@@ -72,58 +175,26 @@ namespace Logic
                 Value = "Bullshit, your solution doesnt seem to be good. Still wanna fix it?"
             };
 
-            blder.Entity<Question>()
-                .HasData(new[] { question, question2 });
-
-            var answers = Enumerable.Range(1, 1).Select(i => new
+            var array = new[]
             {
-                Value = "Well, in some way.." + -i,
-                Id = -i,
-                OriginId = question.Id,
-                NextQuestionId = question2.Id
-            });
-
-            blder.Entity<Answer>()
-                .HasData(answers);
-
-            var problems = Enumerable.Range(1, 20).Select(i => new
-            {
-                Description = "нет кофенет конет кофенет кофефенет кофенет кофенет кофенет кофенет кофенет кофе",
-                Name = "мм проблема",
-                ShortDescription = "holy crap",
-                Id = -i,
-                FirstQuestionId = question.Id
-            });
-
-            blder.Entity<Problem>()
-                .HasData(problems);
-
-            var solution = new
-            {
-                ProblemId = problems.First().Id,
-                Id = -1,
-                Value = "Ok, just sit down and wait 5 mins.."
+                question1,
+                question2
             };
 
-            blder.Entity<Solution>()
-                .HasData(solution);
-
-            var lastAnswer = new
-            {
-                Value = "Yes please do.",
-                Id = answers.Last().Id - 1,
-                OriginId = question2.Id,
-                SolutionId = solution.Id
-            };
-
-            blder.Entity<Answer>()
-                .HasData(lastAnswer);
+            return array;
         }
 
-        private static void SeedKeys(ModelBuilder blder)
+        public static void SeedKeys(ModelBuilder blder)
+        {
+            var keys = GetKeys();
+
+            blder.Entity<Key>()
+                .HasData(keys);
+        }
+        public static ICollection<object> GetKeys()
         {
             var strs = new[]
-                        {
+            {
                 "306ec960-34a5-4d6d-91e5-edfe64d0d74a",
                 "32629b5d-b986-49e5-b97a-5389ff0e92e1",
                 "a597c89e-29df-4519-a194-6ea4dc932992",
@@ -136,10 +207,9 @@ namespace Logic
                 "b3069483-2f8b-47a8-9722-38ea89ce057f"
             };
 
-            var keys = strs.Select(i => new Key { Value = i });
+            var keys = strs.Select(i => new Key { Value = i }).ToArray();
 
-            blder.Entity<Key>()
-                .HasData(keys);
+            return keys;
         }
 
         public DbSet<UserInfo> UserInfos { get; set; }
