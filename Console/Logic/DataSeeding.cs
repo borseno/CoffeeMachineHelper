@@ -13,23 +13,16 @@ namespace Logic
         {
             var solution1 = new
             {
-                ProblemId = -999,
+                ProblemId = -1,
                 Id = -1,
-                Value = "Ok, just sit down and wait 5 mins.."
-            };
-
-            var solution2 = new
-            {
-                ProblemId = -999,
-                Id = -2,
-                Value = "mock value"
+                Value = "Ok, then just dont use it for 5 mins."
             };
 
             var solutions = new object[]
             {
-                solution1,
-                solution2
+                solution1              
             };
+
             return solutions;
         }
 
@@ -37,7 +30,7 @@ namespace Logic
         {
             var answer1 = new
             {
-                Value = "Well, in some way..",
+                Value = "Maybe it's because I'm a loose dude... 😕",
                 Id = -1,
                 OriginId = -1,
                 NextQuestionId = -2
@@ -45,16 +38,25 @@ namespace Logic
 
             var answer2 = new
             {
-                Value = "Well, in some way..",
+                Value = "Well, sometimes it did... yeah...",
                 Id = -2,
                 OriginId = -2,
                 NextQuestionId = -3
             };
 
+            var answer3 = new
+            {
+                Value = "Yes..",
+                Id = -3,
+                OriginId = -3, 
+                SolutionId = -1
+            };
+
             var answers = new object[]
             {
                 answer1,
-                answer2
+                answer2,
+                answer3
             };
 
             return answers;
@@ -64,7 +66,7 @@ namespace Logic
         {
             var problem = new
             {
-                Description = "Machine is not working anymore, although it used to work ",
+                Description = "Machine is not working anymore, although it used to work",
                 Name = "Not working machine",
                 ShortDescription = "Machine is not working anymore!",
                 Id = -1,
@@ -79,26 +81,32 @@ namespace Logic
             return problems;
         }
 
-
         public static ICollection<object> GetQuestions()
         {
             var question1 = new Question
             {
 
                 Id = -1,
-                Value = "How do you wanna fix this?"
+                Value = "Why do you think it is not working?"
             };
 
             var question2 = new Question
             {
                 Id = -2,
-                Value = "Bullshit, your solution doesnt seem to be good. Still wanna fix it?"
+                Value = "Well, that doesnt completely describe why it broke. Has it ever fallen?"
+            };
+
+            var question3 = new Question
+            {
+                Id = -3,
+                Value = "Ok... Jerk your machine a bit. Do you hear a sound of something's falling up and down?"
             };
 
             var array = new[]
             {
                 question1,
-                question2
+                question2,
+                question3
             };
 
             return array;
@@ -124,7 +132,6 @@ namespace Logic
 
             return keys;
         }
-
     }
 
     internal static class DataSeeder
