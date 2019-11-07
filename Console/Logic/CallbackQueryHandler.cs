@@ -51,58 +51,50 @@ namespace Logic
 
             var id = Int32.Parse(data);
 
-            var problem = await ctx.Problems.FirstAsync(i => i.Id == id);
+            var problem = await ctx.Problems
+                .Include(i => i.FirstQuestion)
+                .FirstAsync(i => i.Id == id);
 
             var question = problem.FirstQuestion;
 
-            question ??= new Question
-            {
-                Value = "Dude whatare we gonna do omg??",
+            InlineKeyboardMarkup markup = GetMarkup(question, 10, 0);
 
-                Answers = new List<Answer>
-                {
-                    new Answer
-                    {
-                        Value = "Sup dude!"
-                    }
-                }
-            };
-
-            await AskQuestion(callbackQuery.Message.Chat.Id, userInfo, question);
+            await client.SendTextMessageAsync(callbackQuery.Message.Chat.Id, question.Value, replyMarkup: markup);
 
             userInfo.State.UserStage = UserStage.AnsweringQuestion;
             userInfo.State.Problem = problem;
             userInfo.State.Question = problem.FirstQuestion;
-
         }
-        private async Task AskQuestion(long chatId, UserInfo userInfo, Question firstQuestion)
+
+        private static InlineKeyboardMarkup GetMarkup(Question question, int length, int offset = 0)
         {
-            var answers = firstQuestion.Answers
-                .Take(10)
-                .Select(i => new InlineKeyboardButton
-                {
-                    CallbackData = i.Id.ToString(),
-                    Text = i.Value
-                })
-                .Split(2);
+            var answers = question.Answers.Skip(offset).Take(length);
+
+            var answersButtons = answers.Select(i => new InlineKeyboardButton
+            {
+                CallbackData = i.Id.ToString(),
+                Text = i.Value
+            }).Split(2);
 
             var lastRow = new InlineKeyboardButton[2]
             {
                 new InlineKeyboardButton
                 {
                     Text = "Prev",
-                    CallbackData = $"Prev#TODO"
+                    CallbackData = $"Prev#{question.Id}#{length}#{offset}"
                 },
                 new InlineKeyboardButton
                 {
                     Text = "Next",
-                    CallbackData = $"Next#TODO"
+                    CallbackData = $"Next#{question.Id}#{length}#{offset}"
                 }
             };
 
-            var markup = new InlineKeyboardMarkup(answers.Append(lastRow));
+            var buttonsWithAppended = answersButtons.Append(lastRow);
 
-            await client.SendTextMessageAsync(chatId, firstQuestion.Value, replyMarkup: markup);
+            var markup = new InlineKeyboardMarkup(buttonsWithAppended);
+
+            return markup;
         }
     }
 }
